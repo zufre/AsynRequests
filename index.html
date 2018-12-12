@@ -1,0 +1,68 @@
+<!DOCTYPE html >
+<html>
+  <head>
+    <style>
+      .row{
+        margin-top: 20px
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+</html>
+
+<body>
+  <div class="container">
+    <div class="row">
+        <button id="get-repos">Get Zufres Repos! in JSON!!</button>
+        <button id="get-repos-jquery-ajax">Same with $.ajax</button>
+        <button id="get-repos-jquery-get">Same with $.get</button>
+    </div>
+    <div class="row">
+        <pre id="response"></pre>
+    </div>
+</div>
+  <script> console.log('loading event handlers');
+    var $response = document.getElementById("response");
+    var $getReposBtn = document.getElementById("get-repos");
+    $getReposBtn.onclick = function(){
+        var xhr = new XMLHttpRequest();
+        xhr.timeout = 2000;
+        xhr.onreadystatechange = function(e){
+            console.log(this);
+            if (xhr.readyState === 4){
+                if (xhr.status === 200){
+                    // debugger;
+                    // console.log(xhr.response);
+                    $response.innerHTML = xhr.response;
+                } else {
+                    console.error("XHR didn't work: ", xhr.status);
+                }
+            }
+        }
+        xhr.ontimeout = function (){
+            console.error("request timedout: ", xhr);
+        }
+        xhr.open("get", "https://api.github.com/users/zufre/repos", /*async*/ true);
+        // xhr.responseType = "text";
+        xhr.send();
+    }
+    
+    
+    
+
+    var $getReposJQueryAjaxBtn = document.getElementById("get-repos-jquery-ajax");
+    $getReposJQueryAjaxBtn.onclick = function(){
+        $.ajax("https://api.github.com/users/zufre/repos")
+        .done(function(data){
+            $response.innerHTML = JSON.stringify(data,null,2);
+        });
+    }
+    
+    var $getReposJQueryGetBtn = document.getElementById("get-repos-jquery-get");
+    $getReposJQueryGetBtn.onclick = function(){
+        $.get("https://api.github.com/users/zufre/repos")
+        .done(function(data){
+            $response.innerHTML = JSON.stringify(data,null,2);
+        });
+    }</script>
+</body>
